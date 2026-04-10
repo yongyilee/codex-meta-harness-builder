@@ -1,0 +1,47 @@
+# {{ role.title }}
+
+Role ID: `{{ role.id }}`
+Kind: `{{ role.kind }}`
+Agent Type: `{{ role.agent_type }}`
+Model: `{{ role.model }}`
+Reasoning Effort: `{{ role.reasoning_effort }}`
+
+## Mission
+
+{{ role.mission or role.title }}
+
+## Inputs
+
+{% for item in role.inputs %}
+- `{{ item }}`
+{% endfor %}
+
+## Outputs
+
+{% for item in role.outputs %}
+- `{{ item }}`
+{% endfor %}
+
+## Responsibilities
+
+{% for item in role.responsibilities %}
+- {{ item }}
+{% endfor %}
+
+## Collaboration Rules
+
+- Persist shared execution state in files, not in transient plan state.
+- If delegated execution is not allowed, hand work back to the orchestrator for single-agent completion.
+- Do not assume this role is auto-installed as a native Codex agent.
+{% if role.handoff and role.handoff.can_spawn %}
+- Allowed spawn targets:
+{% for item in role.handoff.can_spawn %}
+  - `{{ item }}`
+{% endfor %}
+{% endif %}
+{% if role.handoff and role.handoff.can_message %}
+- Allowed message targets:
+{% for item in role.handoff.can_message %}
+  - `{{ item }}`
+{% endfor %}
+{% endif %}

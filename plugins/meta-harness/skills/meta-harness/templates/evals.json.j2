@@ -1,0 +1,19 @@
+{
+  "version": "{{ version }}",
+  "target_harness": "{{ harness.name }}",
+  "baseline": {
+    "mode": "{{ eval.baseline_mode }}"
+  },
+  "trigger_thresholds": {
+    "should_trigger_min": {{ eval.trigger_checks.should_trigger_min }},
+    "should_not_trigger_min": {{ eval.trigger_checks.should_not_trigger_min }}
+  },
+  "trigger_evals": {
+    "should_trigger": {{ trigger_cases_json }},
+    "should_not_trigger": {{ baseline_cases_json }}
+  },
+  "artifacts": {
+    "iterations_dir": "{{ eval.iterations_dir }}",
+    "summary_file": "evals/summary.json"
+  }
+}

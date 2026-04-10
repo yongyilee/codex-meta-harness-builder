@@ -1,0 +1,32 @@
+{
+  "name": "code-review-harness",
+  "domain": "software-engineering",
+  "summary": "Coordinate architecture, security, performance, and test review work for non-trivial repository changes.",
+  "display_name": "Code Review Harness",
+  "target_paths": [
+    "."
+  ],
+  "readme_paths": [
+    "README.md"
+  ],
+  "instruction_files": [
+    "AGENTS.md"
+  ],
+  "focus_areas": [
+    "architecture",
+    "security",
+    "performance",
+    "testing"
+  ],
+  "execution_pattern": "fanout-fanin",
+  "runtime_mode": "hybrid",
+  "delegation_policy": "on-user-request",
+  "should_trigger": [
+    "이 저장소에 대해 병렬 코드 리뷰 하네스를 구성해줘",
+    "구조, 보안, 성능, 테스트 역할로 나눠서 리뷰하는 Codex 하네스를 만들어줘"
+  ],
+  "should_not_trigger": [
+    "현재 변경 파일만 요약해줘",
+    "README 오타만 수정해줘"
+  ]
+}

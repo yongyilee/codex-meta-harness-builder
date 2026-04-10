@@ -1,0 +1,110 @@
+{
+  "version": "0.1",
+  "generated_at": "2026-04-10",
+  "harness": {
+    "name": "code-review-harness",
+    "display_name": "Code Review Harness",
+    "description": "Rendered fixture for template tests.",
+    "domain": "software-engineering",
+    "owner_mode": "generated"
+  },
+  "execution": {
+    "pattern": "sequential",
+    "runtime_mode": "single",
+    "delegation_policy": "on-user-request",
+    "task_ledger_path": "workspace/tasks.json",
+    "artifact_root": "workspace/artifacts"
+  },
+  "context": {
+    "target_paths": [
+      "."
+    ],
+    "readme_paths": [
+      "README.md"
+    ],
+    "instruction_files": [
+      "AGENTS.md"
+    ]
+  },
+  "roles": [
+    {
+      "id": "orchestrator",
+      "title": "Review Orchestrator",
+      "kind": "coordinator",
+      "agent_type": "default",
+      "model": "gpt-5.4-mini",
+      "reasoning_effort": "high",
+      "mission": "Coordinate the generated harness.",
+      "inputs": [
+        "user_request",
+        "repository_context"
+      ],
+      "outputs": [
+        "workspace/artifacts/final-review.md"
+      ],
+      "responsibilities": [
+        "Coordinate review flow",
+        "Merge specialist outputs"
+      ],
+      "handoff": {
+        "can_spawn": [
+          "architecture-reviewer"
+        ],
+        "can_message": [
+          "architecture-reviewer"
+        ]
+      }
+    }
+  ],
+  "skills": [
+    {
+      "id": "orchestrate",
+      "display_name": "Code Review Orchestrate",
+      "path": "skills/orchestrate/SKILL.md",
+      "purpose": "Run the harness",
+      "description": "Run the code review harness end-to-end.",
+      "trigger_keywords": [
+        "review harness",
+        "parallel review"
+      ],
+      "inputs": [
+        "user_request",
+        "repository_context"
+      ],
+      "workflow": [
+        "Read the manifest",
+        "Assign role responsibilities",
+        "Persist artifacts"
+      ],
+      "outputs": [
+        "workspace/artifacts/final-review.md"
+      ],
+      "constraints": [
+        "Fallback to single-agent mode when delegation is unavailable."
+      ]
+    }
+  ],
+  "eval": {
+    "enabled": true,
+    "baseline_mode": "no-harness",
+    "trigger_checks": {
+      "should_trigger_min": 1,
+      "should_not_trigger_min": 1
+    },
+    "iterations_dir": "evals/iterations"
+  },
+  "agents_pointer": {
+    "target_file": "AGENTS.md",
+    "section_title": "Meta Harness: code-review-harness",
+    "update_mode": "patch",
+    "append_history": true
+  },
+  "pointer": {
+    "when_to_use": [
+      "Comprehensive code review requests",
+      "Harness generation or refresh requests"
+    ]
+  },
+  "trigger_cases_json": "[\"Build a code review harness\", \"Create a parallel review harness\"]",
+  "baseline_cases_json": "[\"Summarize the diff only\", \"Fix a typo in README\"]"
+}
