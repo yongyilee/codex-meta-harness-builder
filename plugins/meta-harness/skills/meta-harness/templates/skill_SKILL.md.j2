@@ -1,0 +1,46 @@
+---
+name: {{ (harness.name ~ '-' ~ skill.id) | tojson }}
+description: {{ (skill.description or skill.purpose) | tojson }}
+---
+
+# {{ skill.display_name or skill.id }}
+
+{{ skill.purpose }}
+
+## Trigger
+
+Use this generated skill when the request matches one or more of the following:
+
+{% for item in skill.trigger_keywords %}
+- {{ item }}
+{% endfor %}
+
+## Inputs
+
+{% for item in skill.inputs %}
+- `{{ item }}`
+{% endfor %}
+
+## Workflow
+
+{% for item in skill.workflow %}
+- {{ item }}
+{% endfor %}
+
+## Outputs
+
+{% for item in skill.outputs %}
+- `{{ item }}`
+{% endfor %}
+
+## Constraints
+
+{% if skill.constraints %}
+{% for item in skill.constraints %}
+- {{ item }}
+{% endfor %}
+{% else %}
+- Prefer single-agent execution unless delegated mode is explicitly requested and allowed.
+- Use file-backed ledgers for shared state.
+- Treat this generated skill as a portable bundle. Installation is a separate step.
+{% endif %}

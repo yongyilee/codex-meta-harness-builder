@@ -1,0 +1,26 @@
+{
+  "name": "meta-harness",
+  "version": "0.2.0",
+  "description": "Generate Codex-oriented meta-harness bundles from prompts, briefs, and workflow specifications.",
+  "author": {
+    "name": "local"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "codex",
+    "harness",
+    "scaffolding",
+    "agent"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Meta Harness",
+    "shortDescription": "Generate Codex-oriented meta-harness bundles",
+    "longDescription": "Generate Codex-oriented meta-harness bundles from prompts, briefs, role maps, and evaluation specifications.",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": [
+      "Turn this prompt into a Codex harness bundle with roles, skills, evals, and an AGENTS.md pointer."
+    ]
+  }
+}

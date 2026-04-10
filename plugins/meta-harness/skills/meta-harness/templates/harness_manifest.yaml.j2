@@ -1,0 +1,136 @@
+version: "{{ version }}"
+
+harness:
+  name: "{{ harness.name }}"
+  display_name: "{{ harness.display_name }}"
+  description: >
+    {{ harness.description }}
+  domain: "{{ harness.domain }}"
+  owner_mode: "{{ harness.owner_mode }}"
+  generated_at: "{{ generated_at or harness.generated_at }}"
+
+execution:
+  pattern: "{{ execution.pattern }}"
+  runtime_mode: "{{ execution.runtime_mode }}"
+  delegation_policy: "{{ execution.delegation_policy }}"
+  task_ledger_path: "{{ execution.task_ledger_path }}"
+  artifact_root: "{{ execution.artifact_root }}"
+
+context:
+  target_paths:
+{% for path in context.target_paths %}
+    - "{{ path }}"
+{% endfor %}
+{% if context.readme_paths %}
+  readme_paths:
+{% for path in context.readme_paths %}
+    - "{{ path }}"
+{% endfor %}
+{% endif %}
+{% if context.instruction_files %}
+  instruction_files:
+{% for path in context.instruction_files %}
+    - "{{ path }}"
+{% endfor %}
+{% endif %}
+
+roles:
+{% for role in roles %}
+  - id: "{{ role.id }}"
+    title: "{{ role.title }}"
+    kind: "{{ role.kind }}"
+    agent_type: "{{ role.agent_type }}"
+    model: "{{ role.model }}"
+    reasoning_effort: "{{ role.reasoning_effort }}"
+{% if role.mission %}
+    mission: "{{ role.mission }}"
+{% endif %}
+    inputs:
+{% for item in role.inputs %}
+      - "{{ item }}"
+{% endfor %}
+    outputs:
+{% for item in role.outputs %}
+      - "{{ item }}"
+{% endfor %}
+    responsibilities:
+{% for item in role.responsibilities %}
+      - "{{ item }}"
+{% endfor %}
+{% if role.handoff %}
+    handoff:
+{% if role.handoff.can_spawn %}
+      can_spawn:
+{% for item in role.handoff.can_spawn %}
+        - "{{ item }}"
+{% endfor %}
+{% endif %}
+{% if role.handoff.can_message %}
+      can_message:
+{% for item in role.handoff.can_message %}
+        - "{{ item }}"
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endfor %}
+
+skills:
+{% for skill in skills %}
+  - id: "{{ skill.id }}"
+    path: "{{ skill.path }}"
+{% if skill.display_name %}
+    display_name: "{{ skill.display_name }}"
+{% endif %}
+    purpose: "{{ skill.purpose }}"
+{% if skill.description %}
+    description: "{{ skill.description }}"
+{% endif %}
+{% if skill.trigger_keywords %}
+    trigger_keywords:
+{% for item in skill.trigger_keywords %}
+      - "{{ item }}"
+{% endfor %}
+{% endif %}
+{% if skill.inputs %}
+    inputs:
+{% for item in skill.inputs %}
+      - "{{ item }}"
+{% endfor %}
+{% endif %}
+{% if skill.workflow %}
+    workflow:
+{% for item in skill.workflow %}
+      - "{{ item }}"
+{% endfor %}
+{% endif %}
+{% if skill.outputs %}
+    outputs:
+{% for item in skill.outputs %}
+      - "{{ item }}"
+{% endfor %}
+{% endif %}
+{% if skill.constraints %}
+    constraints:
+{% for item in skill.constraints %}
+      - "{{ item }}"
+{% endfor %}
+{% endif %}
+{% endfor %}
+
+eval:
+  enabled: {{ "true" if eval.enabled else "false" }}
+  baseline_mode: "{{ eval.baseline_mode }}"
+{% if eval.trigger_checks %}
+  trigger_checks:
+    should_trigger_min: {{ eval.trigger_checks.should_trigger_min }}
+    should_not_trigger_min: {{ eval.trigger_checks.should_not_trigger_min }}
+{% endif %}
+{% if eval.iterations_dir %}
+  iterations_dir: "{{ eval.iterations_dir }}"
+{% endif %}
+
+agents_pointer:
+  target_file: "{{ agents_pointer.target_file }}"
+  section_title: "{{ agents_pointer.section_title }}"
+  update_mode: "{{ agents_pointer.update_mode }}"
+  append_history: {{ "true" if agents_pointer.append_history else "false" }}

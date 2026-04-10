@@ -1,0 +1,59 @@
+version: "0.1"
+
+harness:
+  name: code-review-harness
+  display_name: Code Review Harness
+  description: Minimal valid harness fixture for schema validation.
+  domain: software-engineering
+  owner_mode: generated
+  generated_at: 2026-04-10
+
+execution:
+  pattern: sequential
+  runtime_mode: single
+  delegation_policy: on-user-request
+  task_ledger_path: workspace/tasks.json
+  artifact_root: workspace/artifacts
+
+context:
+  target_paths:
+    - .
+  readme_paths:
+    - README.md
+  instruction_files:
+    - AGENTS.md
+
+roles:
+  - id: orchestrator
+    title: Review Orchestrator
+    kind: coordinator
+    agent_type: default
+    model: gpt-5.4
+    reasoning_effort: medium
+    inputs:
+      - user_request
+    outputs:
+      - workspace/artifacts/final-review.md
+    responsibilities:
+      - Coordinate review flow
+
+skills:
+  - id: orchestrate
+    path: skills/orchestrate/SKILL.md
+    purpose: Run the harness
+    trigger_keywords:
+      - review harness
+
+eval:
+  enabled: true
+  baseline_mode: no-harness
+  trigger_checks:
+    should_trigger_min: 1
+    should_not_trigger_min: 1
+  iterations_dir: evals/iterations
+
+agents_pointer:
+  target_file: AGENTS.md
+  section_title: Meta Harness: code-review-harness
+  update_mode: patch
+  append_history: true

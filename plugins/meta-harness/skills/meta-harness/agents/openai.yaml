@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta Harness"
+  short_description: "Generate Codex harness bundles from prompts and briefs"
+  default_prompt: "Use $meta-harness to generate a reusable Codex harness bundle for this task."
