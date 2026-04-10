@@ -28,7 +28,7 @@ roles:
     title: Review Orchestrator
     kind: coordinator
     agent_type: default
-    model: gpt-5.4
+    model: gpt-5.4-mini
     reasoning_effort: medium
     inputs:
       - user_request

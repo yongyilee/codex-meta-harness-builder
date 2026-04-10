@@ -19,9 +19,9 @@ from .utils import ensure_list, slugify, titleize, today_iso
 
 
 ROLE_DEFAULTS = {
-    "coordinator": {"agent_type": "default", "model": "gpt-5.4", "reasoning_effort": "high"},
+    "coordinator": {"agent_type": "default", "model": "gpt-5.4-mini", "reasoning_effort": "high"},
     "specialist": {"agent_type": "explorer", "model": "gpt-5.4-mini", "reasoning_effort": "medium"},
-    "executor": {"agent_type": "worker", "model": "gpt-5.4", "reasoning_effort": "medium"},
+    "executor": {"agent_type": "worker", "model": "gpt-5.4-mini", "reasoning_effort": "medium"},
     "validator": {"agent_type": "explorer", "model": "gpt-5.4-mini", "reasoning_effort": "medium"},
 }
 
