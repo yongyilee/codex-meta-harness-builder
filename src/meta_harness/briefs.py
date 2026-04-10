@@ -151,7 +151,10 @@ def _build_roles(summary: str, brief: dict) -> list[RoleSpec]:
         roles.append(_quality_gate_role(summary))
 
     other_role_ids = [role.id for role in roles if role.id != "orchestrator"]
-    roles[0].handoff = HandoffSpec(can_spawn=other_role_ids, can_message=other_role_ids)
+    orchestrator = next((role for role in roles if role.id == "orchestrator"), None)
+    if orchestrator is None:
+        raise ValueError("Expected an orchestrator role to exist after role normalization.")
+    orchestrator.handoff = HandoffSpec(can_spawn=other_role_ids, can_message=other_role_ids)
     return roles
 
 

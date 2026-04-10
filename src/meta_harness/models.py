@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
+from pathlib import PurePosixPath
 import re
 
 
@@ -33,6 +34,16 @@ def _validate_string_list(values: list[str], label: str) -> None:
     _require(isinstance(values, list), f"{label} must be a list of strings.")
     for item in values:
         _require(isinstance(item, str) and item.strip(), f"{label} contains an empty item.")
+
+
+def _validate_skill_path(value: str) -> None:
+    path = PurePosixPath(value)
+    _require(str(path) == value, f"skill.path must use forward slashes: {value!r}")
+    _require(not path.is_absolute(), f"skill.path must be relative: {value!r}")
+    _require(".." not in path.parts, f"skill.path must not contain parent traversal: {value!r}")
+    _require(len(path.parts) >= 3, f"skill.path must include at least one nested directory: {value!r}")
+    _require(path.parts[0] == "skills", f"skill.path must start with skills/: {value!r}")
+    _require(path.name == "SKILL.md", f"skill.path must end with SKILL.md: {value!r}")
 
 
 @dataclass(slots=True)
@@ -148,7 +159,7 @@ class SkillSpec:
 
     def validate(self) -> None:
         _validate_slug(self.id, "skill.id")
-        _require(self.path.startswith("skills/") and self.path.endswith("/SKILL.md"), f"invalid skill path: {self.path}")
+        _validate_skill_path(self.path)
         _require(self.purpose.strip(), f"skill[{self.id}].purpose is required.")
         _validate_string_list(self.trigger_keywords, f"skill[{self.id}].trigger_keywords")
         _validate_string_list(self.inputs, f"skill[{self.id}].inputs")

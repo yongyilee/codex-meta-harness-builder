@@ -1,74 +1,73 @@
-version: "{{ version }}"
+version: {{ version | tojson }}
 
 harness:
-  name: "{{ harness.name }}"
-  display_name: "{{ harness.display_name }}"
-  description: >
-    {{ harness.description }}
-  domain: "{{ harness.domain }}"
-  owner_mode: "{{ harness.owner_mode }}"
-  generated_at: "{{ generated_at or harness.generated_at }}"
+  name: {{ harness.name | tojson }}
+  display_name: {{ harness.display_name | tojson }}
+  description: {{ harness.description | tojson }}
+  domain: {{ harness.domain | tojson }}
+  owner_mode: {{ harness.owner_mode | tojson }}
+  generated_at: {{ (generated_at or harness.generated_at) | tojson }}
 
 execution:
-  pattern: "{{ execution.pattern }}"
-  runtime_mode: "{{ execution.runtime_mode }}"
-  delegation_policy: "{{ execution.delegation_policy }}"
-  task_ledger_path: "{{ execution.task_ledger_path }}"
-  artifact_root: "{{ execution.artifact_root }}"
+  pattern: {{ execution.pattern | tojson }}
+  runtime_mode: {{ execution.runtime_mode | tojson }}
+  delegation_policy: {{ execution.delegation_policy | tojson }}
+  task_ledger_path: {{ execution.task_ledger_path | tojson }}
+  artifact_root: {{ execution.artifact_root | tojson }}
 
 context:
   target_paths:
 {% for path in context.target_paths %}
-    - "{{ path }}"
+    - {{ path | tojson }}
 {% endfor %}
 {% if context.readme_paths %}
   readme_paths:
 {% for path in context.readme_paths %}
-    - "{{ path }}"
+    - {{ path | tojson }}
 {% endfor %}
 {% endif %}
 {% if context.instruction_files %}
   instruction_files:
 {% for path in context.instruction_files %}
-    - "{{ path }}"
+    - {{ path | tojson }}
 {% endfor %}
 {% endif %}
 
 roles:
 {% for role in roles %}
-  - id: "{{ role.id }}"
-    title: "{{ role.title }}"
-    kind: "{{ role.kind }}"
-    agent_type: "{{ role.agent_type }}"
-    model: "{{ role.model }}"
-    reasoning_effort: "{{ role.reasoning_effort }}"
+  - id: {{ role.id | tojson }}
+    title: {{ role.title | tojson }}
+    kind: {{ role.kind | tojson }}
+    agent_type: {{ role.agent_type | tojson }}
+    model: {{ role.model | tojson }}
+    reasoning_effort: {{ role.reasoning_effort | tojson }}
 {% if role.mission %}
-    mission: "{{ role.mission }}"
+    mission: {{ role.mission | tojson }}
 {% endif %}
     inputs:
 {% for item in role.inputs %}
-      - "{{ item }}"
+      - {{ item | tojson }}
 {% endfor %}
     outputs:
 {% for item in role.outputs %}
-      - "{{ item }}"
+      - {{ item | tojson }}
 {% endfor %}
     responsibilities:
 {% for item in role.responsibilities %}
-      - "{{ item }}"
+      - {{ item | tojson }}
 {% endfor %}
 {% if role.handoff %}
     handoff:
 {% if role.handoff.can_spawn %}
       can_spawn:
 {% for item in role.handoff.can_spawn %}
-        - "{{ item }}"
+        - {{ item | tojson }}
 {% endfor %}
 {% endif %}
 {% if role.handoff.can_message %}
       can_message:
 {% for item in role.handoff.can_message %}
-        - "{{ item }}"
+        - {{ item | tojson }}
 {% endfor %}
 {% endif %}
 {% endif %}
@@ -76,61 +75,61 @@ roles:
 
 skills:
 {% for skill in skills %}
-  - id: "{{ skill.id }}"
-    path: "{{ skill.path }}"
+  - id: {{ skill.id | tojson }}
+    path: {{ skill.path | tojson }}
 {% if skill.display_name %}
-    display_name: "{{ skill.display_name }}"
+    display_name: {{ skill.display_name | tojson }}
 {% endif %}
-    purpose: "{{ skill.purpose }}"
+    purpose: {{ skill.purpose | tojson }}
 {% if skill.description %}
-    description: "{{ skill.description }}"
+    description: {{ skill.description | tojson }}
 {% endif %}
 {% if skill.trigger_keywords %}
     trigger_keywords:
 {% for item in skill.trigger_keywords %}
-      - "{{ item }}"
+      - {{ item | tojson }}
 {% endfor %}
 {% endif %}
 {% if skill.inputs %}
     inputs:
 {% for item in skill.inputs %}
-      - "{{ item }}"
+      - {{ item | tojson }}
 {% endfor %}
 {% endif %}
 {% if skill.workflow %}
     workflow:
 {% for item in skill.workflow %}
-      - "{{ item }}"
+      - {{ item | tojson }}
 {% endfor %}
 {% endif %}
 {% if skill.outputs %}
     outputs:
 {% for item in skill.outputs %}
-      - "{{ item }}"
+      - {{ item | tojson }}
 {% endfor %}
 {% endif %}
 {% if skill.constraints %}
     constraints:
 {% for item in skill.constraints %}
-      - "{{ item }}"
+      - {{ item | tojson }}
 {% endfor %}
 {% endif %}
 {% endfor %}
 
 eval:
   enabled: {{ "true" if eval.enabled else "false" }}
-  baseline_mode: "{{ eval.baseline_mode }}"
+  baseline_mode: {{ eval.baseline_mode | tojson }}
 {% if eval.trigger_checks %}
   trigger_checks:
     should_trigger_min: {{ eval.trigger_checks.should_trigger_min }}
     should_not_trigger_min: {{ eval.trigger_checks.should_not_trigger_min }}
 {% endif %}
 {% if eval.iterations_dir %}
-  iterations_dir: "{{ eval.iterations_dir }}"
+  iterations_dir: {{ eval.iterations_dir | tojson }}
 {% endif %}
 
 agents_pointer:
-  target_file: "{{ agents_pointer.target_file }}"
-  section_title: "{{ agents_pointer.section_title }}"
-  update_mode: "{{ agents_pointer.update_mode }}"
+  target_file: {{ agents_pointer.target_file | tojson }}
+  section_title: {{ agents_pointer.section_title | tojson }}
+  update_mode: {{ agents_pointer.update_mode | tojson }}
   append_history: {{ "true" if agents_pointer.append_history else "false" }}

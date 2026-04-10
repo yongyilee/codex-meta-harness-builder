@@ -6,7 +6,7 @@ harness:
   description: Invalid fixture missing required context.
   domain: software-engineering
   owner_mode: generated
-  generated_at: 2026-04-10
+  generated_at: "2026-04-10"
 
 execution:
   pattern: sequential
@@ -40,5 +40,5 @@ eval:
 
 agents_pointer:
   target_file: AGENTS.md
-  section_title: Meta Harness: code-review-harness
+  section_title: "Meta Harness: Code Review Harness"
   update_mode: patch

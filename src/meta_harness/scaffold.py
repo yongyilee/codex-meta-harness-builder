@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import re
+import shutil
 
 from .briefs import build_manifest_from_brief, default_brief
 from .evals import run_eval
@@ -40,6 +42,8 @@ def generate_harness(
 
     if harness_root.exists() and any(harness_root.iterdir()) and not force:
         raise FileExistsError(f"Target already exists and is not empty: {harness_root}")
+    if harness_root.exists() and force:
+        shutil.rmtree(harness_root)
 
     harness_root.mkdir(parents=True, exist_ok=True)
     for relative in DEFAULT_DIRS:
@@ -64,35 +68,56 @@ def generate_harness(
         (roles_dir / f"{role.id}.md").write_text(render_role_markdown(role), encoding="utf-8")
 
     for skill in manifest.skills:
-        skill_root = skills_dir / skill.path.split("/")[1]
-        skill_root.mkdir(parents=True, exist_ok=True)
-        (skill_root / "SKILL.md").write_text(
+        skill_path = harness_root / Path(*skill.path.split("/"))
+        skill_path.parent.mkdir(parents=True, exist_ok=True)
+        skill_path.write_text(
             render_skill_markdown(manifest.harness.name, skill),
             encoding="utf-8",
         )
 
-    pointer = render_agents_pointer(manifest, pointer_lines)
+    target = Path(agents_file) if agents_file else Path(manifest.agents_pointer.target_file)
+    pointer_root = target.parent if patch_agents or agents_file else Path.cwd()
+    bundle_root = _relative_path(pointer_root, harness_root)
+    pointer = render_agents_pointer(manifest, pointer_lines, bundle_root=bundle_root)
     (harness_root / "AGENTS.pointer.md").write_text(pointer, encoding="utf-8")
 
     if patch_agents:
-        target = Path(agents_file) if agents_file else Path("AGENTS.md")
-        update_agents_file(target, pointer, manifest.harness.display_name)
+        update_agents_file(target, pointer, manifest.agents_pointer.section_title, manifest.agents_pointer.update_mode)
 
     run_eval(harness_root)
     return harness_root
 
 
-def update_agents_file(path: str | Path, section_text: str, display_name: str) -> Path:
+def update_agents_file(path: str | Path, section_text: str, section_title: str, update_mode: str = "patch") -> Path:
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
     existing = target.read_text(encoding="utf-8") if target.exists() else ""
-    pattern = re.compile(rf"(?ms)^## Meta Harness: {re.escape(display_name)}\n.*?(?=^## |\Z)")
-    if pattern.search(existing):
-        updated = pattern.sub(section_text.rstrip() + "\n\n", existing)
-    else:
+    pattern = re.compile(rf"(?ms)^## {re.escape(section_title)}\n.*?(?=^## |\Z)")
+    has_section = bool(pattern.search(existing))
+
+    if update_mode == "append":
         updated = existing.rstrip()
         if updated:
             updated += "\n\n"
         updated += section_text.rstrip() + "\n"
+    elif update_mode == "replace-section":
+        if not has_section:
+            raise ValueError(f"Section not found for replace-section mode: {section_title}")
+        updated = pattern.sub(section_text.rstrip() + "\n\n", existing)
+    else:
+        if has_section:
+            updated = pattern.sub(section_text.rstrip() + "\n\n", existing)
+        else:
+            updated = existing.rstrip()
+            if updated:
+                updated += "\n\n"
+            updated += section_text.rstrip() + "\n"
     target.write_text(updated, encoding="utf-8")
     return target
+
+
+def _relative_path(reference_root: Path, target_path: Path) -> str:
+    try:
+        return Path(os.path.relpath(target_path.resolve(), start=reference_root.resolve())).as_posix()
+    except ValueError:
+        return target_path.resolve().as_posix()

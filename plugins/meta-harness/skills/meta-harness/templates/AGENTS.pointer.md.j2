@@ -1,4 +1,4 @@
-## Meta Harness: {{ harness.display_name }}
+## {{ agents_pointer.section_title }}
 
 Goal: {{ harness.description }}
 
@@ -8,12 +8,14 @@ When to use:
 {% endfor %}
 
 Primary generated assets:
-- `generated/{{ harness.name }}/harness.yaml`
-- `generated/{{ harness.name }}/roles/`
-- `generated/{{ harness.name }}/skills/`
-- `generated/{{ harness.name }}/evals/`
+- `{{ bundle_root }}/harness.yaml`
+- `{{ bundle_root }}/roles/`
+- `{{ bundle_root }}/skills/`
+- `{{ bundle_root }}/evals/`
 
+{% if agents_pointer.append_history %}
 Change log:
 | Date | Change | Author | Reason |
 |---|---|---|---|
 | {{ generated_at }} | Initial pointer generated | meta-harness | Bootstrap generated harness entry |
+{% endif %}

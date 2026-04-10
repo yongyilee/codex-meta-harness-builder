@@ -1,7 +1,9 @@
 import importlib.util
 import json
 from pathlib import Path
+import shutil
 import sys
+import uuid
 
 import pytest
 
@@ -57,3 +59,15 @@ def scaffold_module():
 def template_context(fixtures_root: Path) -> dict:
     path = fixtures_root / "render" / "minimal_context.json"
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+@pytest.fixture()
+def workspace_tmp_path(repo_root: Path):
+    root = repo_root / ".test-artifacts"
+    root.mkdir(exist_ok=True)
+    path = root / uuid.uuid4().hex
+    path.mkdir()
+    try:
+        yield path
+    finally:
+        shutil.rmtree(path, ignore_errors=True)

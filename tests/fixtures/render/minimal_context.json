@@ -95,7 +95,7 @@
   },
   "agents_pointer": {
     "target_file": "AGENTS.md",
-    "section_title": "Meta Harness: code-review-harness",
+    "section_title": "Meta Harness: Code Review Harness",
     "update_mode": "patch",
     "append_history": true
   },
@@ -105,6 +105,7 @@
       "Harness generation or refresh requests"
     ]
   },
+  "bundle_root": "generated/code-review-harness",
   "trigger_cases_json": "[\"Build a code review harness\", \"Create a parallel review harness\"]",
   "baseline_cases_json": "[\"Summarize the diff only\", \"Fix a typo in README\"]"
 }

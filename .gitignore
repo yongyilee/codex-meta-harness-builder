@@ -7,3 +7,4 @@ dist/
 generated/
 *.egg-info/
 analysis/revfactory-harness-repo/
+.test-artifacts/
